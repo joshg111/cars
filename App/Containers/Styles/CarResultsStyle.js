@@ -8,7 +8,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     marginTop: Metrics.navBarHeight,
-    backgroundColor: "white"
+    backgroundColor: "gray"
   },
   row: {
     flex: 1,

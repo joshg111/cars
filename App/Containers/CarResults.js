@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PropTypes } from 'react'
-import { View, Text, ListView } from 'react-native'
+import { View, Image, Text, ListView, Linking } from 'react-native'
 import { connect } from 'react-redux'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 
@@ -14,6 +14,8 @@ import styles from './Styles/CarResultsStyle'
 // Joshs
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
+// import { Button, Card } from 'react-native-material-design';
+import { View as ViewUI, Caption, Subtitle, Card, Image as ImageUI, Tile, Title, Button, Text as TextUI, ListView as ListViewUI } from '@shoutem/ui';
 
 class CarResults extends React.Component {
 
@@ -57,6 +59,10 @@ class CarResults extends React.Component {
     }
   }
 
+  listing_press(url) {
+    Linking.openURL(url);
+  }
+
   /* ***********************************************************
   * STEP 3
   * `renderRow` function -How each cell/row should be rendered
@@ -67,9 +73,28 @@ class CarResults extends React.Component {
   *************************************************************/
   renderRow (rowData) {
     return (
-      <View style={styles.row}>
-        <Text style={styles.boldLabel}>{rowData.title}</Text>
-      </View>
+      <Tile>
+        <ImageUI
+          styleName="large-wide"
+          source={{ uri: rowData.thumbnail }}
+        />
+        <ViewUI styleName="content">
+          <ViewUI styleName="vertical space-between">
+            <Title>{rowData.desc} ${rowData.price}</Title>
+            <ViewUI styleName="horizontal" style={{paddingBottom: 10}}>
+              <TextUI style={{color:"blue"}}>Odometer: </TextUI>
+              <TextUI>{rowData.odometer} </TextUI>
+              <TextUI style={{color:"blue"}}>Location: </TextUI>
+              <TextUI>{rowData.location} </TextUI>
+            </ViewUI>
+            <Button styleName="dark" onPress={this.listing_press.bind(this, rowData.url)}>
+              <TextUI>Go To Listing</TextUI>
+            </Button>
+          </ViewUI>
+
+
+        </ViewUI>
+      </Tile>
     )
   }
 
@@ -116,24 +141,64 @@ class CarResults extends React.Component {
       );
     }
 
+    var car = this.props.cars[0];
+
     // return (
     //   <View style={styles.container}>
     //     <Text>
-    //       {this.props.cars.toString()}
+    //       {car.thumbnail}
     //     </Text>
     //   </View>
     // );
 
+    // return (
+    //   <View style={styles.container}>
+    //     <Image
+    //       style={{width: 50, height: 50}}
+    //       source={{uri: car.thumbnail}}
+    //     />
+    //
+    //   </View>
+    // )
+
+    // return (
+    //   <View style={styles.container}>
+    //     <Tile>
+    //       <ImageUI
+    //         styleName="large-wide"
+    //         source={{ uri: car.thumbnail }}
+    //       />
+    //       <ViewUI styleName="content">
+    //         <ViewUI styleName="horizontal space-between">
+    //           <Title>{car.title}</Title>
+    //           <Button styleName="dark">
+    //             <TextUI>Go To Listing</TextUI>
+    //           </Button>
+    //         </ViewUI>
+    //
+    //         <ViewUI styleName="horizontal">
+    //           <TextUI style={{color:"blue"}}>Year: </TextUI>
+    //           <TextUI>{car.year} </TextUI>
+    //           <TextUI style={{color:"blue"}}>Odometer: </TextUI>
+    //           <TextUI>{car.odometer} </TextUI>
+    //         </ViewUI>
+    //       </ViewUI>
+    //     </Tile>
+    //   </View>
+    // )
+
+    // return (
+    //   <View style={styles.container}>
+    //     <Examples />
+    //   </View>
+    // )
+
     return (
       <View style={styles.container}>
         <AlertMessage title='Nothing to See Here, Move Along' show={this.noRowData()} />
-        <ListView
-          contentContainerStyle={styles.listContent}
-          dataSource={this.ds.cloneWithRows(this.props.cars)}
-          renderRow={this.renderRow}
-          renderFooter={this.renderFooter}
-          enableEmptySections
-          pageSize={15}
+        <ListViewUI
+          data={this.props.cars}
+          renderRow={this.renderRow.bind(this)}
         />
       </View>
     )
@@ -164,9 +229,13 @@ const mapDispatchToProps = (dispatch) => {
 const CarResultsQuery = gql`
   query {
     cars(make: "toyota", model: "camry") {
-      title,
+      desc,
       year,
-      odometer
+      odometer,
+      thumbnail,
+      url,
+      location,
+      price
     }
   }
 `;
