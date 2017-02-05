@@ -15,7 +15,7 @@ import styles from './Styles/CarResultsStyle'
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 // import { Button, Card } from 'react-native-material-design';
-import { View as ViewUI, Caption, Subtitle, Card, Image as ImageUI, Tile, Title, Button, Text as TextUI, ListView as ListViewUI } from '@shoutem/ui';
+import { View as ViewUI, Caption, Subtitle, Card, Image as ImageUI, Tile, Title, Button, Text as TextUI, ListView as ListViewUI, Divider, Row } from '@shoutem/ui';
 
 class CarResults extends React.Component {
 
@@ -63,38 +63,67 @@ class CarResults extends React.Component {
     Linking.openURL(url);
   }
 
-  /* ***********************************************************
-  * STEP 3
-  * `renderRow` function -How each cell/row should be rendered
-  * It's our best practice to place a single component here:
-  *
-  * e.g.
-    return <MyCustomCell title={rowData.title} description={rowData.description} />
-  *************************************************************/
+  rowStyle(percentage) {
+    var res = {paddingLeft:10, paddingBottom:10, paddingRight:10};
+    var color = "red";
+    if (percentage <= 0) {
+      color = "green"
+    }
+
+    res["color"] = color
+
+    return res;
+  }
+
+  renderPercentage(percentage)
+  {
+    var modifierText = " above ";
+    if (percentage <= 0 )
+    {
+      modifierText = " below ";
+    }
+
+    var percentageText = Math.abs(percentage).toString() + "%" + modifierText;
+    percentageText += "kelley blue book"
+
+    return (
+      <Title style={this.rowStyle(percentage)}>
+        {percentageText}
+      </Title>
+    );
+  }
+
   renderRow (rowData) {
     return (
-      <Tile>
-        <ImageUI
-          styleName="large-wide"
-          source={{ uri: rowData.thumbnail }}
-        />
-        <ViewUI styleName="content">
+      <Row style={{backgroundColor:"silver"}}>
+        <Tile style={{}}>
           <ViewUI styleName="vertical space-between">
-            <Title>{rowData.desc} ${rowData.price}</Title>
-            <ViewUI styleName="horizontal" style={{paddingBottom: 10}}>
-              <TextUI style={{color:"blue"}}>Odometer: </TextUI>
-              <TextUI>{rowData.odometer} </TextUI>
-              <TextUI style={{color:"blue"}}>Location: </TextUI>
-              <TextUI>{rowData.location} </TextUI>
-            </ViewUI>
-            <Button styleName="dark" onPress={this.listing_press.bind(this, rowData.url)}>
-              <TextUI>Go To Listing</TextUI>
-            </Button>
+            <Title style={{paddingLeft:10, paddingTop:10, paddingRight:10}}>
+              {rowData.desc} ${rowData.price}
+            </Title>
+            {this.renderPercentage(rowData.percent_above_kbb)}
           </ViewUI>
+          <ImageUI
+            styleName="large-wide"
+            source={{ uri: rowData.thumbnail }}
+          />
+          <ViewUI styleName="content">
+            <ViewUI styleName="vertical space-between">
+              <ViewUI styleName="horizontal" style={{paddingBottom: 10}}>
+                <TextUI style={{color:"blue"}}>Odometer: </TextUI>
+                <TextUI>{rowData.odometer} </TextUI>
+                <TextUI style={{color:"blue"}}>Location: </TextUI>
+                <TextUI>{rowData.location} </TextUI>
+              </ViewUI>
+              <Button styleName="dark" onPress={this.listing_press.bind(this, rowData.url)}>
+                <TextUI>Go To Listing</TextUI>
+              </Button>
+            </ViewUI>
 
 
-        </ViewUI>
-      </Tile>
+          </ViewUI>
+        </Tile>
+      </Row>
     )
   }
 
@@ -141,58 +170,6 @@ class CarResults extends React.Component {
       );
     }
 
-    var car = this.props.cars[0];
-
-    // return (
-    //   <View style={styles.container}>
-    //     <Text>
-    //       {car.thumbnail}
-    //     </Text>
-    //   </View>
-    // );
-
-    // return (
-    //   <View style={styles.container}>
-    //     <Image
-    //       style={{width: 50, height: 50}}
-    //       source={{uri: car.thumbnail}}
-    //     />
-    //
-    //   </View>
-    // )
-
-    // return (
-    //   <View style={styles.container}>
-    //     <Tile>
-    //       <ImageUI
-    //         styleName="large-wide"
-    //         source={{ uri: car.thumbnail }}
-    //       />
-    //       <ViewUI styleName="content">
-    //         <ViewUI styleName="horizontal space-between">
-    //           <Title>{car.title}</Title>
-    //           <Button styleName="dark">
-    //             <TextUI>Go To Listing</TextUI>
-    //           </Button>
-    //         </ViewUI>
-    //
-    //         <ViewUI styleName="horizontal">
-    //           <TextUI style={{color:"blue"}}>Year: </TextUI>
-    //           <TextUI>{car.year} </TextUI>
-    //           <TextUI style={{color:"blue"}}>Odometer: </TextUI>
-    //           <TextUI>{car.odometer} </TextUI>
-    //         </ViewUI>
-    //       </ViewUI>
-    //     </Tile>
-    //   </View>
-    // )
-
-    // return (
-    //   <View style={styles.container}>
-    //     <Examples />
-    //   </View>
-    // )
-
     return (
       <View style={styles.container}>
         <AlertMessage title='Nothing to See Here, Move Along' show={this.noRowData()} />
@@ -216,26 +193,17 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-// const CarResultsQuery = gql`
-//   query get_cars($make: String!, $model: String!) {
-//     cars(make: $make, model: $model) {
-//       title,
-//       year,
-//       odometer
-//     }
-//   }
-// `;
-
 const CarResultsQuery = gql`
-  query {
-    cars(make: "toyota", model: "camry") {
+  query get_cars($make: String!, $model: String!){
+    cars(make: $make, model: $model) {
       desc,
       year,
       odometer,
       thumbnail,
       url,
       location,
-      price
+      price,
+      percent_above_kbb
     }
   }
 `;

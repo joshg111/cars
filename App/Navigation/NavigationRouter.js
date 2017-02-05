@@ -21,7 +21,7 @@ class NavigationRouter extends Component {
     return (
       <Router>
         <Scene key='CarSearch' component={CarSearch} initial title='Search Cars'/>
-        <Scene key='CarResults' component={CarResults}  title='Car Results'/>
+        <Scene key='CarResults' component={CarResults} title='Car Results'/>
       </Router>
     )
   }
