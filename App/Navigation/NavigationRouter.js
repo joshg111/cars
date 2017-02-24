@@ -10,6 +10,7 @@ import CustomNavBar from '../Navigation/CustomNavBar'
 // screens identified by the router
 import CarSearch from '../Containers/CarSearch'
 import CarResults from '../Containers/CarResults'
+import CarMake from '../Containers/CarMake'
 
 
 /* **************************
@@ -21,6 +22,7 @@ class NavigationRouter extends Component {
     return (
       <Router>
         <Scene key='CarSearch' component={CarSearch} initial title='Search Cars'/>
+        <Scene key='CarMake' component={CarMake} title='Choose Make'/>
         <Scene key='CarResults' component={CarResults} title='Car Results'/>
       </Router>
     )

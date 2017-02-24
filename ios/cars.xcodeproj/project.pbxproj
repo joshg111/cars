@@ -50,6 +50,7 @@
 		C62A4CA8BEE948A8941BFA4F /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C216715DDF145D082D5E5A1 /* Rubik-Medium.ttf */; };
 		509CAF9B8B5C41F5B3775126 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B741F5D15B714B5B9019B7D8 /* Rubik-MediumItalic.ttf */; };
 		1071770E14714D7EA5FA74F4 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D5C7865371545E68AA72722 /* Rubik-Regular.ttf */; };
+		DDD7FA3B9A6F4D949613606D /* libRCTMaterialKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A86AD6FCC3F4F4B9085CB44 /* libRCTMaterialKit.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,6 +204,8 @@
 		5C216715DDF145D082D5E5A1 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; name = "Rubik-Medium.ttf"; path = "../node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B741F5D15B714B5B9019B7D8 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; name = "Rubik-MediumItalic.ttf"; path = "../node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		1D5C7865371545E68AA72722 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; name = "Rubik-Regular.ttf"; path = "../node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8F70FF7B223C438FB5FC588F /* RCTMaterialKit.xcodeproj */ = {isa = PBXFileReference; name = "RCTMaterialKit.xcodeproj"; path = "../node_modules/react-native-material-kit/iOS/RCTMaterialKit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		7A86AD6FCC3F4F4B9085CB44 /* libRCTMaterialKit.a */ = {isa = PBXFileReference; name = "libRCTMaterialKit.a"; path = "libRCTMaterialKit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +239,7 @@
 				506FE9D2B31B40BE8A8BC216 /* libRNVectorIcons.a in Frameworks */,
 				5FEE6BC718854E25AE0E82AF /* libBVLinearGradient.a in Frameworks */,
 				4D7A86C0DB4846BD90E3F078 /* libRNShare.a in Frameworks */,
+				DDD7FA3B9A6F4D949613606D /* libRCTMaterialKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +379,7 @@
 				41CE966E4F05499DACC0627C /* RNVectorIcons.xcodeproj */,
 				6B93EB4E5FD84E17ACA72281 /* BVLinearGradient.xcodeproj */,
 				80B8AE36C8CA4C23BBDD28A3 /* RNShare.xcodeproj */,
+				8F70FF7B223C438FB5FC588F /* RCTMaterialKit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -762,6 +767,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -778,6 +784,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cars.app/cars";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -869,6 +876,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
+					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -916,6 +924,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
+					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

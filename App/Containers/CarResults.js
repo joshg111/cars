@@ -1,9 +1,9 @@
 // @flow
 
 import React, { PropTypes } from 'react'
-import { View, Image, Text, ListView, Linking } from 'react-native'
+import { InteractionManager, View, Image, Text, ListView, Linking } from 'react-native'
 import { connect } from 'react-redux'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 // For empty lists
 import AlertMessage from '../Components/AlertMessage'
@@ -17,46 +17,61 @@ import gql from 'graphql-tag';
 // import { Button, Card } from 'react-native-material-design';
 import { View as ViewUI, Caption, Subtitle, Card, Image as ImageUI, Tile, Title, Button, Text as TextUI, ListView as ListViewUI, Divider, Row } from '@shoutem/ui';
 
+import {
+  MKButton,
+  MKColor
+} from 'react-native-material-kit';
+
+// colored button with default theme (configurable)
+const ColoredRaisedButton = MKButton.accentColoredButton()
+  .withBackgroundColor(MKColor.LightBlue)
+  .withText("Refresh")
+  .withStyle({
+      borderRadius: 20,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: .7,
+      shadowColor: 'black',
+      elevation: 4,
+    })
+
+  .build();
+
 class CarResults extends React.Component {
 
   state: {
-    dataSource: Object
+    renderPlaceholderOnly: boolean
   }
 
   constructor (props) {
     super(props)
     // If you need scroll to bottom, consider http://bit.ly/2bMQ2BZ
-
-    /* ***********************************************************
-    * STEP 1
-    * This is an array of objects with the properties you desire
-    * Usually this should come from Redux mapStateToProps
-    *************************************************************/
-    const dataObjects = [
-      {title: 'First Title', description: 'First Description'},
-      {title: 'Second Title', description: 'Second Description'},
-      {title: 'Third Title', description: 'Third Description'},
-      {title: 'Fourth Title', description: 'Fourth Description'},
-      {title: 'Fifth Title', description: 'Fifth Description'},
-      {title: 'Sixth Title', description: 'Sixth Description'},
-      {title: 'Seventh Title', description: 'Seventh Description'}
-    ]
-
-    /* ***********************************************************
-    * STEP 2
-    * Teach datasource how to detect if rows are different
-    * Make this function fast!  Perhaps something like:
-    *   (r1, r2) => r1.id !== r2.id}
-    *************************************************************/
-    const rowHasChanged = (r1, r2) => r1 !== r2
-
-    // DataSource configured
-    this.ds = new ListView.DataSource({rowHasChanged})
-
-    // Datasource is always in state
     this.state = {
-      dataSource: this.ds.cloneWithRows(dataObjects)
-    }
+      renderPlaceholderOnly: true,
+    };
+  }
+
+  onRight()
+  {
+    console.log("Calling onRight()");
+    this.props.refetch();
+    this.forceUpdate();
+    console.log("this.props.loading = " + this.props.loading.toString());
+    console.log("Leaving onRight()");
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        renderPlaceholderOnly: false,
+      });
+    });
+  }
+
+  componentWillMount()
+  {
+    // NavigationActions.refresh({ onRight: this.onRight.bind(this), rightTitle: 'Refresh' });
+
   }
 
   listing_press(url) {
@@ -127,39 +142,8 @@ class CarResults extends React.Component {
     )
   }
 
-  /* ***********************************************************
-  * STEP 4
-  * If your datasource is driven by Redux, you'll need to
-  * reset it when new data arrives.
-  * DO NOT! place `cloneWithRows` inside of render, since render
-  * is called very often, and should remain fast!  Just replace
-  * state's datasource on newProps.
-  *
-  * e.g.
-    componentWillReceiveProps (newProps) {
-      if (newProps.someData) {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(newProps.someData)
-        })
-      }
-    }
-  *************************************************************/
-
-  // Used for friendly AlertMessage
-  // returns true if the dataSource is empty
-  noRowData () {
-    return this.state.dataSource.getRowCount() === 0
-  }
-
-  // Render a footer.
-  renderFooter = () => {
-    return (
-      <Text> - Footer - </Text>
-    )
-  }
-
   render () {
-    if (this.props.loading)
+    if (this.props.loading || this.state.renderPlaceholderOnly)
     {
       return (
         <View style={styles.container}>
@@ -172,10 +156,12 @@ class CarResults extends React.Component {
 
     return (
       <View style={styles.container}>
-        <AlertMessage title='Nothing to See Here, Move Along' show={this.noRowData()} />
         <ListViewUI
+          initialListSize={1}
           data={this.props.cars}
           renderRow={this.renderRow.bind(this)}
+          pageSize={2}
+          scrollRenderAheadDistance={2}
         />
       </View>
     )
@@ -209,12 +195,16 @@ const CarResultsQuery = gql`
 `;
 
 const CarResultsWithData = graphql(CarResultsQuery, {
-  options: ({ make, model }) => ({ variables: { make, model } }),
+  options: ({ make, model }) => (
+    {
+      variables: { make, model }
+    }),
   // ownProps are the props that are passed into the `ProfileWithData`
   // when it is used by a parent component
-  props: ({ ownProps, data: { loading, cars } }) => ({
+  props: ({ ownProps, data: { loading, cars, refetch } }) => ({
     loading: loading,
-    cars: cars
+    cars: cars,
+    refetch: refetch
   }),
 })(CarResults);
 
